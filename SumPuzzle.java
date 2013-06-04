@@ -1,7 +1,18 @@
 
-package com.triangle;
 
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SumPuzzle
 {
@@ -10,27 +21,32 @@ public class SumPuzzle
     {
     }
 
-    public int findSum(int data[])
+    public int findSum(Integer[] newdata)
     {
-        if(data.length == 0)
+        if(newdata.length == 0)
             return 0;
-        int numrows = data.length;
-        int sum = data[0];
+        int numrows = newdata.length;
+        
         int index = 1;
-        int increment = 0;
-        if(numrows >= 2)
-            sum += data[1];
-        for(int r = 3; r <= numrows; r++)
+        int sum = newdata[index-1];
+       
+        int increment = 3;
+        
+        
+        int count=0;
+        for(int r = 2; r <= numrows; r++)
         {
-            if(r % 2 != 0)
-                increment++;
-            if(r % 2 != 0)
-                index = index + increment + (r - 1);
-            else
-                index += r - 1;
-            if(index >= data.length)
+           if(count == 2){
+        	   count=0;
+        	   increment+=2;
+           }
+           
+            index = index + increment ;
+            if(index >= newdata.length)
                 break;
-            sum += data[index];
+            sum += newdata[index];
+            
+            count++;
             System.out.println((new StringBuilder("index :")).append(index).append("sum ").append(sum).toString());
         }
 
@@ -39,10 +55,47 @@ public class SumPuzzle
 
     public static void main(String args[])
     {
-        int data[] = {
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
-            11, 12, 13, 14, 15
-        };
-        (new SumPuzzle()).findSum(data);
+    	File file = new File("/Users/predave/workspace/CTX_Trunk/puzzles/src/triangle.txt");
+    	List<Integer> data = new ArrayList<Integer>();
+    	InputStream fin = null;
+    	try {
+			fin = new FileInputStream(file);
+			BufferedInputStream buf = new BufferedInputStream(fin);
+			try {
+				String sCurrentLine;
+				 
+				BufferedReader br = new BufferedReader(new FileReader("/Users/predave/workspace/CTX_Trunk/puzzles/src/triangle.txt"));
+	 
+				while ((sCurrentLine = br.readLine()) != null) {
+					//System.out.println(sCurrentLine);
+					String[] inps = sCurrentLine.split(" ");
+					for ( int i = 0 ; i < inps.length ; i++){
+						//System.out.println(inps[i]);
+						data.add(Integer.parseInt(inps[i]));
+					}
+				}
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	finally{
+    		if(null != fin){
+    			try {
+					fin.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+    		}
+    	}
+    	Integer[] newdata = data.toArray(new Integer[0]);
+    
+        
+        (new SumPuzzle()).findSum(newdata);
     }
 }
